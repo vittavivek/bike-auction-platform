@@ -38,12 +38,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://bike-auction-platform-mauve.vercel.app",
+        "https://bike-auction-platform-git-main-viveks-projects-ddcf6e18.vercel.app",
+        "https://bike-auction-platform-q1fr6xfrc-viveks-projects-ddcf6e18.vercel.app",
     ],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
 
 
