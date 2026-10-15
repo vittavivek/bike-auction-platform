@@ -7,7 +7,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy import select, text
 from sqlalchemy.exc import IntegrityError
 from decimal import Decimal
-
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -28,11 +28,20 @@ from backend.auth_schemas import (
 from backend.database import SessionLocal
 from backend.models import Auction, User
 from backend.schemas import AuctionCreate
-
 app = FastAPI(
     title="Bike Auction Platform",
     description="API for motorcycle auctions and bidding",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://bike-auction-platform-mauve.vercel.app",
+    ],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
