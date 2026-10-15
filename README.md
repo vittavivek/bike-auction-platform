@@ -1,95 +1,162 @@
 # MotoBid — Bike Auction Platform
 
-MotoBid is a web-based motorcycle auction platform where users can explore motorcycle listings, register accounts, log in securely, and place bids on live auctions.
+A full-stack motorcycle auction platform where registered users can browse used motorcycles, authenticate securely, and participate in auctions by placing validated bids.
 
-## Features
+## 🔗 Live Demo
 
-- User registration and login
-- JWT-based authentication
-- Motorcycle auction listings and search
-- Auction creation restricted to administrators
-- Bid placement with minimum-increment validation
-- Auction time-window validation
-- PostgreSQL database integration
-- Automated API tests using pytest
+- **Frontend:** https://bike-auction-platform-mauve.vercel.app/
+- **Backend API:** https://motobid-api.onrender.com
+- **API Documentation (Swagger):** https://motobid-api.onrender.com/docs
+- **Health Check:** https://motobid-api.onrender.com/health
+- **Source Code:** https://github.com/vittavivek/bike-auction-platform
 
-## Tech Stack
+## ✨ Features
 
-**Frontend:** React, Vite, JavaScript, CSS
+- Browse and search motorcycle auctions.
+- User registration and login using JWT authentication.
+- View current prices and minimum bid increments.
+- Submit bids with server-side validation.
+- Persistent storage using PostgreSQL.
+- Admin-protected auction creation.
+- REST API built with FastAPI.
+- Responsive frontend built with React and Vite.
 
-**Backend:** Python, FastAPI, SQLAlchemy
+## 🛠️ Tech Stack
 
-**Database:** PostgreSQL (Supabase)
+**Frontend:** React, Vite, JavaScript, CSS  
+**Backend:** Python, FastAPI, SQLAlchemy  
+**Database:** PostgreSQL (Supabase)  
+**Authentication:** JWT, Argon2 password hashing  
+**Deployment:** Vercel (frontend), Render (backend), Supabase (database)  
+**Testing:** pytest
 
-**Authentication:** JWT, Argon2 password hashing
+## 🏗️ Architecture
 
-**Testing:** pytest, FastAPI TestClient
+1. The React frontend is hosted on Vercel.
+2. The frontend sends HTTP requests to the FastAPI backend hosted on Render.
+3. FastAPI validates authentication, auction operations, and bids.
+4. SQLAlchemy communicates with the PostgreSQL database hosted on Supabase.
+5. JWT bearer tokens protect authenticated endpoints.
 
-## Project Structure
+## 🚀 Local Setup
 
-```text
-bike-auction-platform/
-├── backend/
-│   ├── main.py
-│   ├── models.py
-│   ├── schemas.py
-│   ├── auth.py
-│   ├── auth_schemas.py
-│   ├── database.py
-│   └── test_main.py
-├── frontend/
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-└── README.md
-```
+### Prerequisites
 
-## Running Locally in GitHub Codespaces
+- Python 3.11 or compatible version
+- Node.js and npm
+- A PostgreSQL database or Supabase project
 
-### Backend
-
-Activate the Python virtual environment and start FastAPI:
+### 1. Clone the repository
 
 ```bash
-source .venv/bin/activate
-uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000
+git clone https://github.com/vittavivek/bike-auction-platform.git
+cd bike-auction-platform
 ```
 
-API documentation is available at `/docs` on the backend URL.
+### 2. Configure the backend
 
-### Frontend
+Create and activate a virtual environment, then install dependencies.
 
-In a separate terminal:
+```bash
+python -m venv .venv
+```
+
+Activate it:
+
+**Windows**
+```bash
+.venv\Scripts\activate
+```
+
+**macOS/Linux**
+```bash
+source .venv/bin/activate
+```
+
+Install backend dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+Configure the following environment variables using your own database credentials and a secure JWT secret:
+
+```text
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_NAME=
+DATABASE_PASSWORD=
+JWT_SECRET_KEY=
+```
+
+Never commit real secrets or passwords to the repository.
+
+Start the backend from the repository root:
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+The API will be available at `http://127.0.0.1:8000`. Interactive API documentation is available at `http://127.0.0.1:8000/docs`.
+
+### 3. Configure the frontend
+
+Open another terminal:
 
 ```bash
 cd frontend
 npm install
-npm run dev -- --host 0.0.0.0
 ```
 
-Open the forwarded frontend port in Codespaces.
+Create a `.env.local` file inside `frontend/`:
 
-## Environment Configuration
+```text
+VITE_API_URL=http://127.0.0.1:8000
+```
 
-Configure the database connection and JWT signing key using Codespaces secrets or environment variables. Never commit passwords, database credentials, access tokens, or signing keys to Git.
-
-## Running Tests
-
-From the repository root:
+Start the development server:
 
 ```bash
-source .venv/bin/activate
+npm run dev
+```
+
+Vite will display the local frontend URL in the terminal.
+
+## 🧪 Run Tests
+
+From the repository root, activate the Python virtual environment and run:
+
+```bash
 python -m pytest backend/test_main.py -v
 ```
 
-## Current Test Coverage
+## 🔐 Demo Access
 
-The automated tests cover the home endpoint, health endpoint, unknown routes, auction listing, authentication enforcement for bidding, and zero-value bid rejection.
+Use the dedicated demo account credentials provided separately to the evaluator. Do not publish passwords, JWT secrets, or database credentials in this repository.
 
-## Future Improvements
+If a demo admin account is provided, use it only for testing administrative functionality.
 
-- Real-time auction updates using WebSockets
-- Bid history for each auction
-- Auction countdown timers
-- Additional integration and concurrency tests
-- Improved error handling and deployment configuration
+## ⚙️ Deployment
+
+- **Frontend:** Deploy the `frontend/` directory through Vercel using the Vite framework preset. Set `VITE_API_URL` to the deployed backend URL.
+- **Backend:** Deploy the repository on Render using `pip install -r requirements.txt` as the build command and `uvicorn backend.main:app --host 0.0.0.0 --port $PORT` as the start command.
+- **Database:** Configure the PostgreSQL connection details as Render environment variables. Keep all credentials in the hosting provider's environment settings.
+
+Configure backend CORS to allow the intended frontend origin.
+
+## 📝 Assumptions and Trade-offs
+
+- PostgreSQL is used for persistent auction, user, and bid data.
+- The backend is authoritative for validating bids and updating auction prices.
+- JWT bearer authentication is used for protected operations.
+- The initial implementation prioritizes core auction flows and a straightforward deployment architecture.
+- Real-time push updates, automated auction lifecycle scheduling, and expanded observability should be documented as completed only after implementation and verification.
+
+## 📌 Future Improvements
+
+- WebSocket-based live bidding updates.
+- Automated auction lifecycle transitions and countdowns.
+- Bid history and auction activity feeds.
+- Expanded integration and concurrency testing.
+- Structured logging, metrics, and monitoring.
